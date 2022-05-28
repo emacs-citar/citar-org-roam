@@ -1,0 +1,32 @@
+
+* citar-org-roam
+
+An emacs package to provide tighter Citar and Org-Roam integration.
+
+** Features
+
+Out-of-box, Citar provides default support for file-per-note bibliographic notes that are compatible with Org-Roam v2.
+This package integrates directly with the Org-Roam database, and provides the following additional features to Citar note support:
+
+ 1. multiple references per note
+ 2. multiple reference notes per file
+ 3. ability to query note citations by reference
+
+** Screenshot
+
+#+CAPTION: citar-open command with citar-org-roam
+[[file:images/open-screenshot.png]]
+
+** Configuration
+
+Activating ~citar-org-roam-mode~ will configure Citar to use these functions.
+
+** Usage
+
+The =citar-open-notes= and =citar-open= commands will work as normal, but will use org-roam to open notes.
+
+To define a sub-file node as a bibliographic note (ref node), use =citar-org-roam-ref-add= to add the ~ROAM_REF~ to the node at point.
+
+Beyond that, the only interactive command this package provides is:
+
+- =citar-org-roam-cited=: presents a list of notes that cite the selected references
