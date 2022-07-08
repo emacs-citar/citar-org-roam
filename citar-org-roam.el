@@ -45,12 +45,13 @@
   `(:name "Org-Roam Ref Notes"
     :category org-roam-node
     :hasnote ,#'citar-org-roam-has-notes
-    :action ,#'citar-org-roam-open-note
+    :open ,#'citar-org-roam-open-note
     :annotate ,#'citar-org-roam--annotate
     :items ,#'citar-org-roam--get-candidates))
 
 (defvar citar-notes-source)
 (defvar citar-notes-sources)
+(defvar embark-default-action-overrides)
 
 ;;; Functions
 
