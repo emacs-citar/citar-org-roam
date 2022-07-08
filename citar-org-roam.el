@@ -111,9 +111,12 @@ note."
             [:select node-id :from refs
              :where (= ref $s1)] key))))
     (if ref-node-ids
-        (dolist (id ref-node-ids)
-          (let ((ref-node (org-roam-node-from-id id)))
-            (org-roam-node-open ref-node)))
+        (let ((number (length ref-node-ids)))
+          (dolist (id ref-node-ids)
+            (let ((ref-node (org-roam-node-from-id id)))
+              (org-roam-node-open ref-node)))
+          (when (> number 1)
+            (message (format "%s notes opened for %s" number key))))
       (citar-org-roam--create-capture-note key entry))))
 
 (defun citar-org-roam-open-note-from-id (node-id)
