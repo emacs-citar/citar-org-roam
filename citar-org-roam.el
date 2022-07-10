@@ -41,16 +41,18 @@
   :type 'string)
 
 ;; REVEIW experimental config
-(defvar citar-org-roam-notes-config
-  `(:name "Org-Roam Ref Notes"
-    :category org-roam-node
-    :hasnote ,#'citar-org-roam-has-notes
-    :action ,#'citar-org-roam-open-note
-    :annotate ,#'citar-org-roam--annotate
-    :items ,#'citar-org-roam--get-candidates))
+(defconst citar-org-roam-notes-config
+  (list :name "Org-Roam Notes"
+        :category 'org-roam-node
+        :items #'citar-org-roam--get-candidates
+        :hasitems #'citar-org-roam-has-notes
+        :open #'citar-org-roam-open-note
+        :create #'citar-org-roam--create-capture-note
+        :annotate #'citar-org-roam--annotate))
 
 (defvar citar-notes-source)
 (defvar citar-notes-sources)
+(defvar embark-default-action-overrides)
 
 ;;; Functions
 
@@ -59,27 +61,15 @@
   (let ((ref-node (org-roam-node-from-ref (concat "@" key))))
     (when ref-node t)))
 
-(defun citar-org-roam-has-notes (&optional _entries)
+(defun citar-org-roam-has-notes ()
   "Return function to check for notes.
 When given a citekey, return non-nil if there's an associated
 note."
-  (let* ((hasnotes (citar-org-roam-keys-with-notes))
-         (l (length hasnotes)))
-    ;; REVIEW this function needs to be fast. Accessing the db for each key is
-    ;; slow. So we collect the keys in one go.
-    ;;
-    ;; I also borrowed this idea from 'delete-dups' to use a hash-table when
-    ;; there are a lot of references with notes; over 100. Is this sound for
-    ;; this use case? I think so because this function should be recreated each
-    ;; time 'citar-select-ref' is called?
-    (if (> l 100)
-        (let ((hash (make-hash-table :test #'equal :size l)))
-          (dolist (key hasnotes)
-            (puthash key t hash))
-          (lambda (citekey)
-            (gethash citekey hash)))
-      (lambda (citekey)
-        (member citekey hasnotes)))))
+  (let ((hasnotes (make-hash-table :test 'equal)))
+    (dolist (citekey (citar-org-roam-keys-with-notes))
+      (puthash citekey t hasnotes))
+    (lambda (citekey)
+      (gethash citekey hasnotes))))
 
 (defun citar-org-roam-keys-with-notes ()
   "Return a list of keys with associated note(s)."
@@ -101,24 +91,15 @@ note."
     ;; TODO need to open the note.
     note))
 
-(defun citar-org-roam-open-note (id-key entry)
-  "Open or creat org-roam node for ID-KEY and ENTRY."
-  (let* ((key (car (split-string id-key " ")))
-         (ref-node-ids
-          (flatten-list
-           (org-roam-db-query
-            [:select node-id :from refs
-             :where (= ref $s1)] key))))
-    (if ref-node-ids
-        (dolist (id ref-node-ids)
-          (let ((ref-node (org-roam-node-from-id id)))
-            (org-roam-node-open ref-node)))
-      (citar-org-roam--create-capture-note key entry))))
+(defun citar-org-roam-open-note (key-id)
+  "Open or creat org-roam node for KEY-ID."
+  (let ((id (cadr (split-string key-id))))
+    (citar-org-roam-open-note-from-id id)))
 
 (defun citar-org-roam-open-note-from-id (node-id)
   "Open note from NODE-ID."
   (let ((ref-node (org-roam-node-from-id node-id)))
-    (org-roam-node-open ref-node)))
+    (org-roam-node-visit ref-node)))
 
 (defun citar-org-roam-ref-add ()
   "Add a roam_ref to the node at point.
@@ -171,21 +152,16 @@ This is just a wrapper for 'org-roam-ref-add'."
 Each candidate is a 'citekey' + 'node-id' string, separated by a
 space."
   ;; REVIEW experimental
-  (let ((refs nil))
-    (progn
-      (if keys
-          (dolist (key keys)
-            (let ((nodes (citar-org-roam--get-ref-nodes-for-key key)))
-              (dolist (node nodes)
-                (push node refs))))
-        (setq refs (citar-org-roam--get-ref-nodes)))
-      (mapcar
-       (lambda (ref)
-         (let* ((citekey (car ref))
-                (nodeid (cadr ref)))
-           (concat
-            citekey " " (propertize nodeid 'invisible t))))
-       refs))))
+  (let ((refs (if keys
+                  (mapcan #'citar-org-roam--get-ref-nodes-for-key keys)
+                (citar-org-roam--get-ref-nodes))))
+    (mapcar
+     (lambda (ref)
+       (let* ((citekey (car ref))
+              (nodeid (cadr ref)))
+         (concat
+          citekey " " (propertize nodeid 'invisible t))))
+     refs)))
 
 (defun citar-org-roam-select-ref ()
   "Return org-roam node-id for ref candidate."
