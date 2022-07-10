@@ -92,7 +92,7 @@ note."
     note))
 
 (defun citar-org-roam-open-note (key-id)
-  "Open or creat org-roam node for ID-KEY and ENTRY."
+  "Open or creat org-roam node for KEY-ID."
   (let ((id (cadr (split-string key-id))))
     (citar-org-roam-open-note-from-id id)))
 
