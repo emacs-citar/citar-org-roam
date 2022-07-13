@@ -179,7 +179,8 @@ space."
       '(("r" "reference" plain "%?" :if-new
          (file+head
           ;; REVIEW not sure the file name shoud be citekey alone.
-          "%(concat citar-org-roam-subdir \"/\" \"${citekey}.org\")"
+          "%(concat
+ (when citar-org-roam-subdir (concat citar-org-roam-subdir \"/\")) \"${citekey}.org\")"
           ":PROPERTIES:
 :ROAM_REFS: @${citekey}
 :END:
