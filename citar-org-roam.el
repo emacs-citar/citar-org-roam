@@ -155,16 +155,17 @@ This is just a wrapper for 'org-roam-ref-add'."
 Each candidate is a 'citekey' + 'node-id' string, separated by a
 space."
   ;; REVIEW experimental
-  (let ((refs (if keys
-                  (mapcan #'citar-org-roam--get-ref-nodes-for-key keys)
-                (citar-org-roam--get-ref-nodes))))
-    (mapcar
-     (lambda (ref)
-       (let* ((citekey (car ref))
-              (nodeid (cadr ref)))
-         (concat
-          citekey " " (propertize nodeid 'invisible t))))
-     refs)))
+  (let ((nodes (org-roam-db-query `[:select [refs:node-id refs:ref nodes:title]
+                                            :from [refs nodes]
+                                            :where (and (= refs:type "cite")
+                                                        (= refs:node-id nodes:id)
+                                                        ,@(when keys '((in refs:ref $v1))))]
+                                  (vconcat keys)))
+        (cands (make-hash-table :test 'equal)))
+    (prog1 cands
+      (pcase-dolist (`(,nodeid ,citekey ,_title) nodes)
+        ;; TODO include note title in the candidate string?
+        (push (concat citekey " " (propertize nodeid 'invisible t)) (gethash citekey cands))))))
 
 (defun citar-org-roam-select-ref ()
   "Return org-roam node-id for ref candidate."
