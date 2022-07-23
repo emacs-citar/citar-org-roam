@@ -65,6 +65,8 @@
   "Return function to check for notes.
 When given a citekey, return non-nil if there's an associated
 note."
+  ;; Lookup performance for this function needs to be as fast as possible, so we
+  ;; use a hash-table.
   (let ((hasnotes (make-hash-table :test 'equal)))
     (dolist (citekey (citar-org-roam-keys-with-notes))
       (puthash citekey t hasnotes))
