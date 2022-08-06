@@ -107,7 +107,7 @@ note."
 (defun citar-org-roam-ref-add ()
   "Add a roam_ref to the node at point.
 
-This is just a wrapper for 'org-roam-ref-add'."
+This is just a wrapper for `org-roam-ref-add'."
   (interactive)
   (let ((ref (citar-select-ref)))
     (org-roam-ref-add (concat "@" ref))))
@@ -152,7 +152,7 @@ This is just a wrapper for 'org-roam-ref-add'."
 (defun citar-org-roam--get-candidates (&optional keys)
   "Return ref node candidate list, optionally filtered by KEYS.
 
-Each candidate is a 'citekey' + 'node-id' string, separated by a
+Each candidate is a citekey + node-id string, separated by a
 space."
   ;; REVIEW experimental
   (let ((nodes (org-roam-db-query `[:select [refs:node-id refs:ref nodes:title]
@@ -187,7 +187,7 @@ space."
           ":PROPERTIES:
 :ROAM_REFS: @${citekey}
 :END:
- #+title: ${title}\n")
+#+title: ${title}\n")
          :immediate-finish t
          :unnarrowed t))
       :info (list :citekey citekey)
@@ -197,13 +197,13 @@ space."
 (defvar citar-org-roam--orig-source citar-notes-source)
 
 (defun citar-org-roam-setup ()
-  "Setup 'citar-org-roam-mode'."
+  "Setup `citar-org-roam-mode'."
   (citar-register-notes-source
    'citar-org-roam citar-org-roam-notes-config)
   (setq citar-notes-source 'citar-org-roam))
 
 (defun citar-org-roam-reset ()
-  "Reset 'citar-org-roam-mode' to default."
+  "Reset `citar-org-roam-mode' to default."
   (setq citar-notes-source citar-org-roam--orig-source)
   (citar-remove-notes-source 'citar-org-roam))
 
