@@ -184,15 +184,13 @@ space."
           ;; REVIEW not sure the file name shoud be citekey alone.
           "%(concat
  (when citar-org-roam-subdir (concat citar-org-roam-subdir \"/\")) \"${citekey}.org\")"
-          ":PROPERTIES:
-:ROAM_REFS: @${citekey}
-:END:
-#+title: ${title}\n")
+          "#+title: ${title}\n")
          :immediate-finish t
          :unnarrowed t))
       :info (list :citekey citekey)
       :node (org-roam-node-create :title title)
-      :props '(:finalize find-file))))
+      :props '(:finalize find-file))
+     (org-roam-ref-add (concat "@" citekey))))
 
 (defvar citar-org-roam--orig-source citar-notes-source)
 
