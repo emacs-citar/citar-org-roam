@@ -167,11 +167,6 @@ space."
         ;; TODO include note title in the candidate string?
         (push (concat citekey " " (propertize nodeid 'invisible t)) (gethash citekey cands))))))
 
-(defun citar-org-roam-select-ref ()
-  "Return org-roam node-id for ref candidate."
-  ;; TODO just a demo ATM
-  (completing-read "ref:" (citar-org-roam--get-candidates)))
-
 (defun citar-org-roam--create-capture-note (citekey entry)
     "Open or create org-roam node for CITEKEY and ENTRY."
    ;; adapted from https://jethrokuan.github.io/org-roam-guide/#orgc48eb0d
