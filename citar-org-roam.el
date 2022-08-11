@@ -33,6 +33,15 @@
   :group 'citar-org-roam
   :type 'string)
 
+(defcustom citar-org-roam-create-function
+  #'citar-org-roam--create-capture-note
+  "Function to use to create new notes."
+  :group 'citar
+  :group 'citar-org-roam
+  :type '(choice (function-item :tag "Use 'citar-org-roam'" citar-org-roam--create-capture-note)
+                 (function-item :tag "Use 'org-roam-bibtex'" orb-citar-edit-note)
+                 (function :tag "Other")))
+
 (defcustom citar-org-roam-note-title-template
   "${author editor} :: ${title}"
   "The citar template to use for formatting new note titles."
@@ -47,7 +56,7 @@
         :items #'citar-org-roam--get-candidates
         :hasitems #'citar-org-roam-has-notes
         :open #'citar-org-roam-open-note
-        :create #'citar-org-roam--create-capture-note
+        :create citar-org-roam-create-function
         :annotate #'citar-org-roam--annotate))
 
 (defvar citar-notes-source)
