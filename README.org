@@ -22,6 +22,13 @@ This package integrates directly with the Org-Roam database, and provides the fo
 
 Activating ~citar-org-roam-mode~ will configure Citar to use these functions.
 
+#+begin_src emacs-lisp
+(use-package citar-org-roam
+  :after citar org-roam
+  :no-require
+  :config (citar-org-roam-mode))
+#+end_src
+
 ** Usage
 
 The =citar-open-notes= and =citar-open= commands will work as normal, but will use org-roam to open notes.
