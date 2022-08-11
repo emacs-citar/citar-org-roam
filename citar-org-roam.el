@@ -5,7 +5,7 @@
 ;; Author: Bruce D'Arcus <bdarcus@gmail.com>
 ;; Maintainer: Bruce D'Arcus <bdarcus@gmail.com>
 ;; Created: May 22, 2022
-;; Version: 0.2
+;; Version: 0.3
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; SPDX-FileCopyrightText: 2022 Bruce D'Arcus
 ;; Homepage: https://github.com/emacs-citar/citar-org-roam
