@@ -154,7 +154,6 @@ This is just a wrapper for `org-roam-ref-add'."
 
 Each candidate is a citekey + node-id string, separated by a
 space."
-  ;; REVIEW experimental
   (let ((nodes (org-roam-db-query `[:select [refs:node-id refs:ref nodes:title]
                                             :from [refs nodes]
                                             :where (and (= refs:type "cite")
@@ -176,7 +175,6 @@ space."
       :templates
       '(("r" "reference" plain "%?" :if-new
          (file+head
-          ;; REVIEW not sure the file name shoud be citekey alone.
           "%(concat
  (when citar-org-roam-subdir (concat citar-org-roam-subdir \"/\")) \"${citekey}.org\")"
           "#+title: ${title}\n")
