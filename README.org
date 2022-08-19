@@ -1,3 +1,4 @@
+[[https://melpa.org/#/citar][file:https://melpa.org/packages/citar-org-roam-badge.svg]]
 
 * citar-org-roam
 
@@ -17,6 +18,10 @@ This package integrates directly with the Org-Roam database, and provides the fo
 
 #+CAPTION: citar-open command with citar-org-roam
 [[file:images/open-screenshot.png]]
+
+** Installation
+
+This package is available via [[https://melpa.org/#/citar-org-roam][MELPA]].
 
 ** Configuration
 
