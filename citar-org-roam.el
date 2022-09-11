@@ -87,6 +87,7 @@ note."
                              :where (= cite-key $s1)] reference))
          ;; TODO one issue on the citar side: the UI has no "has" indicators for
          ;; these.
+         ;; Also need an annotation for this.
          (node-id
           (if ids
               (completing-read "Note: " ids)
