@@ -85,13 +85,13 @@ note."
   (let* ((ids
          (org-roam-db-query [:select * :from citations
                              :where (= cite-key $s1)] reference))
-         ;; TODO candidates need to be more useful
-         (note
+         ;; TODO one issue on the citar side: the UI has no "has" indicators for
+         ;; these.
+         (node-id
           (if ids
               (completing-read "Note: " ids)
             (message "No notes cite this reference."))))
-    ;; TODO need to open the note.
-    note))
+    (org-roam-node-visit (org-roam-node-from-id node-id))))
 
 (defun citar-org-roam-open-note (key-id)
   "Open or creat org-roam node for KEY-ID."
