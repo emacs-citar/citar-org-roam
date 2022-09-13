@@ -144,11 +144,7 @@ This is just a wrapper for `org-roam-ref-add'."
               (ref (org-roam-db-query
                     [:select ref :from refs
                      :where (= node-id $s1)] nodeid)))
-    (concat
-     "          " ; not thrilled with this
-     (truncate-string-to-width
-      (propertize citekey 'face 'citar-highlight) 15 nil 32)
-     (propertize (org-roam-node-title node) 'face 'citar))))
+    (propertize (org-roam-node-title node) 'face 'citar)))
 
 (defun citar-org-roam--get-candidates (&optional keys)
   "Return ref node candidate list, optionally filtered by KEYS.
@@ -165,7 +161,10 @@ space."
     (prog1 cands
       (pcase-dolist (`(,nodeid ,citekey ,_title) nodes)
         ;; TODO include note title in the candidate string?
-        (push (concat citekey " " (propertize nodeid 'invisible t)) (gethash citekey cands))))))
+        (push
+         (truncate-string-to-width
+          (concat citekey " " (propertize nodeid 'invisible t)) 60 nil 32)
+         (gethash citekey cands))))))
 
 (defun citar-org-roam--create-capture-note (citekey entry)
     "Open or create org-roam node for CITEKEY and ENTRY."
