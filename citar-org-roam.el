@@ -163,7 +163,7 @@ space."
         ;; TODO include note title in the candidate string?
         (push
          (truncate-string-to-width
-          (concat citekey " " (propertize nodeid 'invisible t)) 60 nil 32)
+          (concat citekey " " (propertize nodeid 'invisible t)) 87 nil 32)
          (gethash citekey cands))))))
 
 (defun citar-org-roam--create-capture-note (citekey entry)
