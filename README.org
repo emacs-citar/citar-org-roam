@@ -43,7 +43,3 @@ To define a sub-file node as a bibliographic note (ref node), use =citar-org-roa
 Beyond that, the only interactive command this package provides is:
 
 - =citar-org-roam-cited=: presents a list of notes that cite the selected references
-
-** Limitations, caveats
-
-With the current candidate design, you must limit citekeys to 50 characters.
