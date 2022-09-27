@@ -47,8 +47,7 @@
         :items #'citar-org-roam--get-candidates
         :hasitems #'citar-org-roam-has-notes
         :open #'citar-org-roam-open-note
-        :create #'citar-org-roam--create-capture-note
-        :annotate #'citar-org-roam--annotate))
+        :create #'citar-org-roam--create-capture-note))
 
 (defvar citar-notes-source)
 (defvar citar-notes-sources)
@@ -97,7 +96,7 @@ note."
 (defun citar-org-roam-open-note (key-id)
   "Open or creat org-roam node for KEY-ID."
   (let ((id (substring-no-properties
-             (cadr (split-string key-id)))))
+             (car (split-string key-id)))))
     (citar-org-roam-open-note-from-id id)))
 
 (defun citar-org-roam-open-note-from-id (node-id)
@@ -159,11 +158,14 @@ space."
                                   (vconcat keys)))
         (cands (make-hash-table :test 'equal)))
     (prog1 cands
-      (pcase-dolist (`(,nodeid ,citekey ,_title) nodes)
+      (pcase-dolist (`(,nodeid ,citekey ,title) nodes)
         ;; TODO include note title in the candidate string?
         (push
-         (truncate-string-to-width
-          (concat citekey " " (propertize nodeid 'invisible t)) 87 nil 32)
+         (concat
+          (propertize nodeid 'invisible t) " ["
+          (propertize citekey 'face 'citar-highlight)
+          (truncate-string-to-width "] " (- 60 (length citekey)) nil 32)
+          (propertize title 'face 'citar))
          (gethash citekey cands))))))
 
 (defun citar-org-roam--create-capture-note (citekey entry)
