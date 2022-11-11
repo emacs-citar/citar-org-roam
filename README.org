@@ -34,6 +34,12 @@ Activating ~citar-org-roam-mode~ will configure Citar to use these functions.
   :config (citar-org-roam-mode))
 #+end_src
 
+To change the default new note output, you can modify the ~citar-org-roam-note-title~ variable:
+
+#+begin_src emacs-lisp
+(setq citar-org-roam-note-title-template "${author} - ${title}\n#+filetags: ${tags}")
+#+end_src
+
 ** Usage
 
 The =citar-open-notes= and =citar-open= commands will work as normal, but will use org-roam to open notes.
