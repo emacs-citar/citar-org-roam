@@ -45,7 +45,7 @@
   "When non-nil, `citar-org-roam--create-capture-note' will use the
 template associated with the key in `org-roam-capture-templates'.
 
-When nil (the default), the template will be creating a org file
+When nil (the default), the template will be creating an org file
 in `citar-org-roam-subdir' named after the citekey with
 `citar-org-roam-note-title-template' as the format of its title."
   :group 'citar
