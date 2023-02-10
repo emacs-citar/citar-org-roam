@@ -40,6 +40,17 @@
   :group 'citar-org-roam
   :type 'string)
 
+(defcustom citar-org-roam-capture-template-key
+  nil
+  "When non-nil, `citar-org-roam--create-capture-note' will use the
+template associated with the key in `org-roam-capture-templates'.
+
+When nil (the default), the template will be creating a org file
+in `citar-org-roam-subdir' named after the citekey with
+`citar-org-roam-note-title-template' as the format of its title."
+  :group 'citar
+  :group 'citar-org-roam
+  :type 'string)
 ;; REVEIW experimental config
 (defconst citar-org-roam-notes-config
   (list :name "Org-Roam Notes"
@@ -169,23 +180,27 @@ space."
          (gethash citekey cands))))))
 
 (defun citar-org-roam--create-capture-note (citekey entry)
-    "Open or create org-roam node for CITEKEY and ENTRY."
-   ;; adapted from https://jethrokuan.github.io/org-roam-guide/#orgc48eb0d
-    (let ((title (citar-format--entry
-                   citar-org-roam-note-title-template entry)))
-     (org-roam-capture-
-      :templates
-      '(("r" "reference" plain "%?" :if-new
-         (file+head
-          "%(concat
- (when citar-org-roam-subdir (concat citar-org-roam-subdir \"/\")) \"${citekey}.org\")"
-          "#+title: ${title}\n")
-         :immediate-finish t
-         :unnarrowed t))
-      :info (list :citekey citekey)
-      :node (org-roam-node-create :title title)
-      :props '(:finalize find-file))
-     (org-roam-ref-add (concat "@" citekey))))
+  "Open or create org-roam node for CITEKEY and ENTRY."
+  ;; adapted from https://jethrokuan.github.io/org-roam-guide/#orgc48eb0d
+  (let ((title (citar-format--entry
+                citar-org-roam-note-title-template entry))
+        (key citar-org-roam-capture-template-key))
+    (apply 'org-roam-capture-
+           :info (list :citekey citekey)
+           :node (org-roam-node-create :title title)
+           :props '(:finalize find-file)
+           (if key
+               (list :keys key)
+             (list
+              :templates
+              '(("r" "reference" plain "%?" :if-new
+                 (file+head
+                  "%(concat
+     (when citar-org-roam-subdir (concat citar-org-roam-subdir \"/\")) \"${citekey}.org\")"
+                  "#+title: ${title}\n")
+                 :immediate-finish t
+                 :unnarrowed t)))))
+    (org-roam-ref-add (concat "@" citekey))))
 
 (defvar citar-org-roam--orig-source citar-notes-source)
 
