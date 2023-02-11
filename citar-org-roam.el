@@ -42,16 +42,18 @@
 
 (defcustom citar-org-roam-capture-template-key
   nil
-  "When non-nil, `citar-org-roam--create-capture-note' will use the
-template associated with the key in `org-roam-capture-templates'.
+  "When non-nil, use capture template associated with the key.
 
-When nil (the default), the template will be creating an org file
-in `citar-org-roam-subdir' named after the citekey with
+ `citar-org-roam--create-capture-note' will use the template
+associated with the key in `org-roam-capture-templates'.
+
+When nil (the default), the template will create an org file in
+`citar-org-roam-subdir' named after the citekey with
 `citar-org-roam-note-title-template' as the format of its title."
   :group 'citar
   :group 'citar-org-roam
   :type 'string)
-;; REVEIW experimental config
+
 (defconst citar-org-roam-notes-config
   (list :name "Org-Roam Notes"
         :category 'org-roam-node
