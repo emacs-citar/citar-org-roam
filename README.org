@@ -40,6 +40,35 @@ To change the default new note output, you can modify the ~citar-org-roam-note-t
 (setq citar-org-roam-note-title-template "${author} - ${title}\n#+filetags: ${tags}")
 #+end_src
 
+Or to use the template already defined in your ~org-roam-capture-templates~, you can modify the
+~citar-org-roam-capture-template-key~ variable.
+
+As an example, ~org-roam-capture-templates~ is defined like so:
+
+#+begin_src emacs-lisp
+  (setq org-roam-capture-templates
+        '(("d" "default" plain
+           "%?"
+           :target
+           (file+head
+            "%<%Y%m%d%H%M%S>-${slug}.org"
+            "#+title: ${title}\n")
+           :unnarrowed t)
+          ("n" "literature note" plain
+           "%?"
+           :target
+           (file+head
+            "%(expand-file-name \"literature\" org-roam-directory)/${citekey}.org"
+            "#+TITLE: ${citekey}. ${title}.\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\n")
+           :unnarrowed t)))
+#+end_src
+
+if you want to use your "literature note" template you can set ~citar-org-roam-capture-template-key~ to its key, ="n"=.
+
+#+begin_src emacs-lisp
+  (setq citar-org-roam-capture-template-key "n")
+#+end_src
+
 ** Usage
 
 The =citar-open-notes= and =citar-open= commands will work as normal, but will use org-roam to open notes.
