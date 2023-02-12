@@ -58,8 +58,8 @@ As an example, ~org-roam-capture-templates~ is defined like so:
            "%?"
            :target
            (file+head
-            "%(expand-file-name \"literature\" org-roam-directory)/${citekey}.org"
-            "#+TITLE: ${citekey}. ${title}.\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\n")
+            "%(expand-file-name (or citar-org-roam-subdir "") org-roam-directory)/${citekey}.org"
+            "#+title: ${citekey}. ${title}.\n#+created: %U\n#+last_modified: %U\n\n")
            :unnarrowed t)))
 #+end_src
 
