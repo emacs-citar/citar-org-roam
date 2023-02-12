@@ -43,7 +43,7 @@ To change the default new note output, you can modify the ~citar-org-roam-note-t
 Or to use the template already defined in your ~org-roam-capture-templates~, you can modify the
 ~citar-org-roam-capture-template-key~ variable.
 
-As an example, ~org-roam-capture-templates~ is defined like so:
+As an example, ~org-roam-capture-templates~ is defined like so; where the ~title~ variable formatting will be determined by ~citar-org-roam-note-title-template~:
 
 #+begin_src emacs-lisp
   (setq org-roam-capture-templates
