@@ -27,6 +27,8 @@
 (require 'org-roam)
 (require 'citar)
 
+(declare-function citar-citeproc-format-reference "ext:citar-citeproc")
+
 (defcustom citar-org-roam-subdir "references"
   "Org-roam subdirectory to place reference notes."
   :group 'citar
@@ -39,6 +41,19 @@
   :group 'citar
   :group 'citar-org-roam
   :type 'string)
+
+(defcustom citar-org-roam-note-title-formatting
+  ;; TODO make function public?
+  (cons 'citar  "${author editor:%etal} :: ${title}")
+  "A cons that specifies a formatter symbol and a value.
+
+If the formatter is `citar', the value should be a citar template
+string.
+
+If it is `csl', it should be a CSL style, either as a string, or
+a path."
+  :group 'citar
+  :type 'cons)
 
 (defcustom citar-org-roam-capture-template-key
   nil
@@ -184,8 +199,11 @@ space."
 (defun citar-org-roam--create-capture-note (citekey entry)
   "Open or create org-roam node for CITEKEY and ENTRY."
   ;; adapted from https://jethrokuan.github.io/org-roam-guide/#orgc48eb0d
-  (let ((title (citar-format--entry
-                citar-org-roam-note-title-template entry))
+  (let* ((tvalue (cdr citar-org-roam-note-title-formatting))
+        (title
+         (if (eq 'citar (car citar-org-roam-note-title-formatting))
+             (citar-format--entry tvalue entry)
+           (citar-citeproc-format-reference (list citekey) tvalue)))
         (key citar-org-roam-capture-template-key))
     (apply 'org-roam-capture-
            :info (list :citekey citekey)
