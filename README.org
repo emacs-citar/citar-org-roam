@@ -29,9 +29,9 @@ Activating ~citar-org-roam-mode~ will configure Citar to use these functions.
 
 #+begin_src emacs-lisp
 (use-package citar-org-roam
-  :after citar org-roam
-  :no-require
-  :config (citar-org-roam-mode))
+  :after (citar org-roam)
+  :config
+  (citar-org-roam-mode))
 #+end_src
 
 To change the default new note output, you can modify the ~citar-org-roam-note-title~ variable:
