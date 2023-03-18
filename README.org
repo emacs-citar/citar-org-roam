@@ -29,8 +29,7 @@ Activating ~citar-org-roam-mode~ will configure Citar to use these functions.
 
 #+begin_src emacs-lisp
 (use-package citar-org-roam
-  :after citar org-roam
-  :no-require
+  :after (citar org-roam)
   :config (citar-org-roam-mode))
 #+end_src
 
