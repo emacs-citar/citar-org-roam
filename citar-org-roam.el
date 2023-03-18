@@ -208,6 +208,8 @@ space."
 
 (defun citar-org-roam-setup ()
   "Setup `citar-org-roam-mode'."
+  ;; This seems to require running if citar is loaded before org-roam.
+  (org-roam-db-sync)
   (citar-register-notes-source
    'citar-org-roam citar-org-roam-notes-config)
   (setq citar-notes-source 'citar-org-roam))
