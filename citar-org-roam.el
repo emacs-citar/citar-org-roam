@@ -201,15 +201,18 @@ space."
 
 (defun citar-org-roam--make-info-plist (citekey)
   "Return org-roam capture template plist for CITEKEY."
-    (let ((infopl))
-    (dolist (fieldmap citar-org-roam-template-fields)
-      (let* ((entry (citar-get-entry citekey))
-             (templatevarname (car fieldmap))
-             (citarvarnames (cdr fieldmap))
-             (val (cdr (citar-get-field-with-value citarvarnames entry))))
-        (setq infopl (plist-put infopl templatevarname val))))
-    (setq infopl (plist-put infopl :citar-citekey citekey))
-    infopl))
+    (let ((infoplist))
+    (seq-do
+     (pcase-lambda (`(,capturevar . ,citarvars))
+       ;; REVIEW do we only want to do this when non-nil?
+                   (setq infoplist
+                         (plist-put infoplist capturevar
+                                    (cdr (citar-get-field-with-value
+                                          citarvars citekey)))))
+    citar-org-roam-template-fields)
+    (setq infoplist
+          (plist-put infoplist :citar-citekey citekey))
+  infoplist))
 
 (defun citar-org-roam--create-capture-note (citekey entry)
   "Open or create org-roam node for CITEKEY and ENTRY."
