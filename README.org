@@ -33,16 +33,16 @@ Activating ~citar-org-roam-mode~ will configure Citar to use these functions.
   :config (citar-org-roam-mode))
 #+end_src
 
-To change the default new note output, you can modify the ~citar-org-roam-note-title~ variable:
+To change the default note title output, you can modify the ~citar-org-roam-note-title-template~ variable:
 
 #+begin_src emacs-lisp
-(setq citar-org-roam-note-title-template "${author} - ${title}\n#+filetags: ${tags}")
+(setq citar-org-roam-note-title-template "${author} - ${title}")
 #+end_src
 
-Or to use the template already defined in your ~org-roam-capture-templates~, you can modify the
-~citar-org-roam-capture-template-key~ variable.
+This will set the title in the ~org-roam~ database, and therefore the completion interface.
 
-As an example, ~org-roam-capture-templates~ is defined like so; where the ~title~ variable formatting will be determined by ~citar-org-roam-note-title-template~:
+To format the actual note file, specify which of the ~org-roam-capture-templates~ to use for bibliographic note formatting.
+As an example, with ~org-roam-capture-templates~ defined like so:
 
 #+begin_src emacs-lisp
   (setq org-roam-capture-templates
@@ -57,16 +57,20 @@ As an example, ~org-roam-capture-templates~ is defined like so; where the ~title
            "%?"
            :target
            (file+head
-            "%(expand-file-name \"literature\" org-roam-directory)/${citekey}.org"
-            "#+title: ${citekey}. ${title}.\n#+created: %U\n#+last_modified: %U\n\n")
+            "%(expand-file-name \"literature\" org-roam-directory)/${citar-citekey}.org"
+            "#+title: ${citar-citekey} (${citar-date}). ${note-title}.\n#+created: %U\n#+last_modified: %U\n\n")
            :unnarrowed t)))
 #+end_src
 
-if you want to use your "literature note" template you can set ~citar-org-roam-capture-template-key~ to its key, ="n"=.
+... if you then want to use your "literature note" template for new bibliographic notes, you can set ~citar-org-roam-capture-template-key~ to its key:
 
 #+begin_src emacs-lisp
   (setq citar-org-roam-capture-template-key "n")
 #+end_src
+
+In that example template, the ~note-title~ template variable includes the formatting noted above for new note titles as specified in ~citar-org-roam-note-title-template~.
+Note also the template includes some ~citar~-related template variables, including ~citar-date~.
+This is an example of data passed from ~citar~ to the capture template, the details of which you can configure in ~citar-org-roam-template-fields~.
 
 ** Usage
 

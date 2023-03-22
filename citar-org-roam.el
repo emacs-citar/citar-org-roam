@@ -33,6 +33,31 @@
   :group 'citar-org-roam
   :type 'string)
 
+(defcustom citar-org-roam-note-title-template
+  "${author editor} :: ${title}"
+  "The citar template to use for formatting new note titles.
+
+This is the value that is stored as the title in the `org-roam'
+database, and displayed in the completion interface."
+  :group 'citar
+  :group 'citar-org-roam
+  :type 'string)
+
+(defcustom citar-org-roam-template-fields
+  '((:citar-title . ("title"))
+    (:citar-author . ("author" "editor"))
+    (:citar-date . ("date" "year" "issued"))
+    (:citar-pages . ("pages"))
+    (:citar-type . ("=type=")))
+  "Field data to include in `org-roam' capture templates.
+The `car' of each cons is the property symbol, and the `cdr' the
+list of field names to use. When more than one, the value will
+be the first result."
+  :group 'citar
+  :group 'citar-org-roam
+  :type '(alist :key-type symbol
+          :value-type 'list))
+
 (defcustom citar-org-roam-capture-template-key
   nil
   "When non-nil, use capture template associated with the key.
@@ -174,31 +199,43 @@ space."
           (propertize title 'face 'citar))
          (gethash citekey cands))))))
 
+(defun citar-org-roam--make-info-plist (citekey)
+  "Return org-roam capture template plist for CITEKEY."
+  (let* ((infopl)
+         (entry (citar-get-entry citekey)))
+     (cl-loop for (key value)
+              on citar-org-roam-template-fields
+              by 'cddr
+         do (setq infopl
+             (plist-put infopl
+                        key
+                        (cdr (citar-get-field-with-value value entry)))))
+     (setq infopl (plist-put infopl :citar-citekey citekey))
+     infopl))
+
 (defun citar-org-roam--create-capture-note (citekey entry)
   "Open or create org-roam node for CITEKEY and ENTRY."
   ;; adapted from https://jethrokuan.github.io/org-roam-guide/#orgc48eb0d
-  (let ((title (citar-get-value "title" entry))
-        (key citar-org-roam-capture-template-key)
-        (author (or (citar-get-value "author" entry)
-                    (citar-get-value "editor" entry)))
-        (type (citar-get-value "=type=" entry))
-        (pages (citar-get-value "pages" entry))
-        (year (or (citar-get-value "year" entry)
-                  (citar-get-value "date" entry)
-                  (citar-get-value "issued" entry))))
+  (let* ((notetitle (citar-format--entry
+                     citar-org-roam-note-title-template entry))
+         (templatekey citar-org-roam-capture-template-key)
+         (infoplist (citar-org-roam--make-info-plist citekey)))
     (apply 'org-roam-capture-
-           :info (list :citekey citekey :author author :type type :pages pages :year year)
-           :node (org-roam-node-create :title title)
+           :info (setq infoplist
+                       ;; Add notetitle in case someone wants to use it in their
+                       ;; capture template.
+                       (plist-put infoplist :note-title notetitle))
+           :node (org-roam-node-create :title notetitle)
            :props '(:finalize find-file)
-           (if key
-               (list :keys key)
+           (if templatekey
+               (list :keys templatekey)
              (list
               :templates
               '(("r" "reference" plain "%?" :if-new
                  (file+head
                   "%(concat
-     (when citar-org-roam-subdir (concat citar-org-roam-subdir \"/\")) \"${citekey}.org\")"
-                  "#+title: ${title}\n")
+     (when citar-org-roam-subdir (concat citar-org-roam-subdir \"/\")) \"${citar-citekey}.org\")"
+                  "#+title: ${note-title}\n")
                  :immediate-finish t
                  :unnarrowed t)))))
     (org-roam-ref-add (concat "@" citekey))))
