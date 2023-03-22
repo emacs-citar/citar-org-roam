@@ -208,7 +208,7 @@ space."
               by 'cddr
          do (setq infopl
              (plist-put infopl
-                        key
+                        (car key)
                         (cdr (citar-get-field-with-value value entry)))))
      (setq infopl (plist-put infopl :citar-citekey citekey))
      infopl))
