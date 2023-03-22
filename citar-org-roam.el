@@ -33,13 +33,6 @@
   :group 'citar-org-roam
   :type 'string)
 
-(defcustom citar-org-roam-note-title-template
-  "${author editor} :: ${title}"
-  "The citar template to use for formatting new note titles."
-  :group 'citar
-  :group 'citar-org-roam
-  :type 'string)
-
 (defcustom citar-org-roam-capture-template-key
   nil
   "When non-nil, use capture template associated with the key.
@@ -48,8 +41,8 @@
 associated with the key in `org-roam-capture-templates'.
 
 When nil (the default), the template will create an org file in
-`citar-org-roam-subdir' named after the citekey with
-`citar-org-roam-note-title-template' as the format of its title."
+`citar-org-roam-subdir' named after the citekey with using the
+title of the entry as the org title."
   :group 'citar
   :group 'citar-org-roam
   :type 'string)
@@ -184,11 +177,17 @@ space."
 (defun citar-org-roam--create-capture-note (citekey entry)
   "Open or create org-roam node for CITEKEY and ENTRY."
   ;; adapted from https://jethrokuan.github.io/org-roam-guide/#orgc48eb0d
-  (let ((title (citar-format--entry
-                citar-org-roam-note-title-template entry))
-        (key citar-org-roam-capture-template-key))
+  (let ((title (citar-get-value "title" entry))
+        (key citar-org-roam-capture-template-key)
+        (author (or (citar-get-value "author" entry)
+                    (citar-get-value "editor" entry)))
+        (type (citar-get-value "=type=" entry))
+        (pages (citar-get-value "pages" entry))
+        (year (or (citar-get-value "year" entry)
+                  (citar-get-value "date" entry)
+                  (citar-get-value "issued" entry))))
     (apply 'org-roam-capture-
-           :info (list :citekey citekey)
+           :info (list :citekey citekey :author author :type type :pages pages :year year)
            :node (org-roam-node-create :title title)
            :props '(:finalize find-file)
            (if key
