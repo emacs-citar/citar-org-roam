@@ -33,6 +33,8 @@ Activating ~citar-org-roam-mode~ will configure Citar to use these functions.
   :config (citar-org-roam-mode))
 #+end_src
 
+### Templates
+
 To change the default note title output, you can modify the ~citar-org-roam-note-title-template~ variable:
 
 #+begin_src emacs-lisp
