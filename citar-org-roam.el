@@ -1,11 +1,11 @@
 ;;; citar-org-roam.el --- Citar/org-roam integration -*- lexical-binding: t; -*-
 ;;
-;; Copyright (C) 2022 Bruce D'Arcus
+;; Copyright (C) 2022-2023 Bruce D'Arcus
 ;;
 ;; Author: Bruce D'Arcus <bdarcus@gmail.com>
 ;; Maintainer: Bruce D'Arcus <bdarcus@gmail.com>
 ;; Created: May 22, 2022
-;; Version: 0.4.0
+;; Version: 0.5.0
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; SPDX-FileCopyrightText: 2022 Bruce D'Arcus
 ;; Homepage: https://github.com/emacs-citar/citar-org-roam
