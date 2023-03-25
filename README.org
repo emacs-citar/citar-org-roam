@@ -53,7 +53,7 @@ As an example, with ~org-roam-capture-templates~ defined like so:
            :target
            (file+head
             "%<%Y%m%d%H%M%S>-${slug}.org"
-            "#+title: ${title}\n")
+            "#+title: ${note-title}\n")
            :unnarrowed t)
           ("n" "literature note" plain
            "%?"
