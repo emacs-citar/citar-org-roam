@@ -59,7 +59,7 @@ As an example, with ~org-roam-capture-templates~ defined like so:
            "%?"
            :target
            (file+head
-            "%(expand-file-name citar-org-roam-subdir org-roam-directory)/${citar-citekey}.org"
+            "%(expand-file-name (or citar-org-roam-subdir "") org-roam-directory)/${citar-citekey}.org"
             "#+title: ${citar-citekey} (${citar-date}). ${note-title}.\n#+created: %U\n#+last_modified: %U\n\n")
            :unnarrowed t)))
 #+end_src
