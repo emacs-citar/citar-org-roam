@@ -27,7 +27,7 @@
 (require 'org-roam)
 (require 'citar)
 
-(defcustom citar-org-roam-subdir "references"
+(defcustom citar-org-roam-subdir nil
   "Org-roam subdirectory to place reference notes."
   :group 'citar
   :group 'citar-org-roam
