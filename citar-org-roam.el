@@ -44,11 +44,12 @@ database, and displayed in the completion interface."
   :type 'string)
 
 (defcustom citar-org-roam-template-fields
-  '((:citar-title . ("title"))
-    (:citar-author . ("author" "editor"))
-    (:citar-date . ("date" "year" "issued"))
-    (:citar-pages . ("pages"))
-    (:citar-type . ("=type=")))
+  '((:citar-title    ("title")                    nil)
+    (:citar-author   ("author" "editor")          nil)
+    (:citar-date     ("date" "year" "issued")     nil)
+    (:citar-pages    ("pages")                    nil)
+    (:citar-type     ("=type=")                   nil)
+    (:citar-note     ("note")                     nil))
   "Field data to include in `org-roam' capture templates.
 The `car' of each cons is the property symbol, and the `cdr' the
 list of field names to use. When more than one, the value will
@@ -202,14 +203,13 @@ space."
 (defun citar-org-roam--make-info-plist (citekey)
   "Return org-roam capture template plist for CITEKEY."
     (let ((infoplist))
-    (seq-do
-     (pcase-lambda (`(,capturevar . ,citarvars))
-       ;; REVIEW do we only want to do this when non-nil?
-                   (setq infoplist
-                         (plist-put infoplist capturevar
-                                    (cdr (citar-get-field-with-value
-                                          citarvars citekey)))))
-    citar-org-roam-template-fields)
+      (seq-do
+       (pcase-lambda (`(,capturevar ,citarvars ,filter))
+         (let* ((rawstr (cdr (citar-get-field-with-value citarvars citekey)))
+                (fstr (if filter (apply filter rawstr) rawstr)))
+           (setq infoplist
+                 (plist-put infoplist capturevar fstr))))
+       citar-org-roam-template-fields)
     (setq infoplist
           (plist-put infoplist :citar-citekey citekey))
   infoplist))
