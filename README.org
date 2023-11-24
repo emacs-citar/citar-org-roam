@@ -13,6 +13,7 @@ This package integrates directly with the Org-Roam database, and provides the fo
  2. multiple reference notes per file
  3. ability to query note citations by reference
  4. "live" updating of Citar UI for presence of notes
+ 5. support for org-roam capture templates
 
 ** Screenshot
 
