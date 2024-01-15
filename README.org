@@ -74,6 +74,11 @@ In that example template, the ~note-title~ template variable includes the format
 Note also the template includes some ~citar~-related template variables, including ~citar-date~.
 This is an example of data passed from ~citar~ to the capture template, the details of which you can configure in ~citar-org-roam-template-fields~.
 
+*** Note Completion Candidates
+
+The display string for org-roam notes attached to a reference in the Citar UI
+can be customised by setting ~org-roam-cite-format-note-candidate-fn~.
+
 ** Usage
 
 The =citar-open-notes= and =citar-open= commands will work as normal, but will use org-roam to open notes.

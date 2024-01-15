@@ -72,6 +72,18 @@ title of the entry as the org title."
   :group 'citar-org-roam
   :type 'string)
 
+(defcustom citar-org-roam-format-note-candidate-fn #'citar-org-roam-format-note-candidate
+  "Function to use the display string for roam node completion
+candidates in the Citar UI.
+
+The function should accept three arguments `nodeid', `citekey'
+and `title' and return a formatted string. For an example see
+`citar-org-roam-format-candidate'"
+  :group 'citar
+  :group 'citar-org-roam
+  :type 'function)
+
+
 (defconst citar-org-roam-notes-config
   (list :name "Org-Roam Notes"
         :category 'org-roam-node
@@ -176,6 +188,12 @@ This is just a wrapper for `org-roam-ref-add'."
                      :where (= node-id $s1)] nodeid)))
     (propertize (org-roam-node-title node) 'face 'citar)))
 
+(defun citar-org-roam-format-note-candidate (nodeid citekey title)
+  (concat 
+   " ["
+   (propertize (format "%s: %s" citekey title) 'face 'citar-highlight)
+   (truncate-string-to-width "] " (- 60 (length citekey)) nil 32)))
+
 (defun citar-org-roam--get-candidates (&optional keys)
   "Return ref node candidate list, optionally filtered by KEYS.
 
@@ -190,13 +208,10 @@ space."
         (cands (make-hash-table :test 'equal)))
     (prog1 cands
       (pcase-dolist (`(,nodeid ,citekey ,title) nodes)
-        ;; TODO include note title in the candidate string?
         (push
-         (concat
-          (propertize nodeid 'invisible t) " ["
-          (propertize citekey 'face 'citar-highlight)
-          (truncate-string-to-width "] " (- 60 (length citekey)) nil 32)
-          (propertize title 'face 'citar))
+	 (concat
+	  (propertize nodeid 'invisible t)
+	  (funcall citar-org-roam-format-note-candidate-fn nodeid citekey title))
          (gethash citekey cands))))))
 
 (defun citar-org-roam--make-info-plist (citekey)
