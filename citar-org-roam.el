@@ -124,6 +124,17 @@ note."
             (message "No notes cite this reference."))))
     (org-roam-node-visit (org-roam-node-from-id node-id))))
 
+(defun citar-org-roam-open-node-at-point ()
+  "Calls `citar-open' on all citar cite-keys in the :ROAM_REFS:
+property of the current org-roam node."
+  (interactive)
+  (let ((citar-open-prompt t)
+	(refs (seq-filter (lambda (key) (gethash key (citar-get-entries)))
+			  (org-roam-node-refs (org-roam-node-at-point)))))
+    (if refs
+	(citar-open refs)
+      (message "No CiteRefs for this note"))))
+
 (defun citar-org-roam-open-note (key-id)
   "Open or creat org-roam node for KEY-ID."
   (let ((id (substring-no-properties
