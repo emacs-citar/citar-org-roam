@@ -78,7 +78,7 @@ candidates in the Citar UI.
 
 The function should accept three arguments `nodeid', `citekey'
 and `title' and return a formatted string. For an example see
-`citar-org-roam-format-candidate'"
+`citar-org-roam-format-note-candidate'"
   :group 'citar
   :group 'citar-org-roam
   :type 'function)
