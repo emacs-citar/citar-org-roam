@@ -75,6 +75,8 @@ In that example template, the ~note-title~ template variable includes the format
 Note also the template includes some ~citar~-related template variables, including ~citar-date~.
 This is an example of data passed from ~citar~ to the capture template, the details of which you can configure in ~citar-org-roam-template-fields~.
 
+For additional template ideas, please see, and contribute to, the [[https://github.com/emacs-citar/citar-org-roam/wiki][wiki]].
+
 ** Usage
 
 The =citar-open-notes= and =citar-open= commands will work as normal, but will use org-roam to open notes.
