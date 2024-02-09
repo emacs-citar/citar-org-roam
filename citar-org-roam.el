@@ -124,16 +124,25 @@ note."
             (message "No notes cite this reference."))))
     (org-roam-node-visit (org-roam-node-from-id node-id))))
 
-(defun citar-org-roam-open-node-at-point ()
-  "Calls `citar-open' on all citar cite-keys in the :ROAM_REFS:
-property of the current org-roam node."
-  (interactive)
-  (let ((citar-open-prompt t)
-	(refs (seq-filter (lambda (key) (gethash key (citar-get-entries)))
-			  (org-roam-node-refs (org-roam-node-at-point)))))
-    (if refs
-	(citar-open refs)
-      (message "No CiteRefs for this note"))))
+(defun citar-org-roam--node-cite-refs (roam-node)
+  "Returns citation keys in :ROAM_REFS: property of ROAM-NODE"
+  (seq-filter (lambda (key) (gethash key (citar-get-entries)))
+	      (org-roam-node-refs roam-node)))
+
+(defun citar-org-roam-open-current-refs (&optional prefix)
+  "With the point in the body of an org-roam node, this function
+calls `citar-open' on all citar cite keys in the :ROAM_REFS:
+property of the node.
+
+If PREFIX is given prompts to select one or more of the cite keys
+before calling `citar-open' on them."
+  (interactive "P")
+  (if-let ((citar-open-prompt t)
+	   (refs (citar-org-roam--node-cite-refs (org-roam-node-at-point))))
+      (if prefix
+	  (citar-open (citar-select-refs :filter (lambda (key) (member key refs))))
+	(citar-open refs))
+    (message "No CiteRefs for this note")))
 
 (defun citar-org-roam-open-note (key-id)
   "Open or creat org-roam node for KEY-ID."

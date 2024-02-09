@@ -83,4 +83,4 @@ To define a sub-file node as a bibliographic note (ref node), use =citar-org-roa
 Beyond that, the only interactive command this package provides is:
 
 - =citar-org-roam-cited=: presents a list of notes that cite the selected references
-- =citar-org-roam-open-node-at-point=: Opens Citar UI for all cite references associated with the roam-node in the current buffer.
+- =citar-org-roam-open-current-refs=: Opens Citar UI for all cite references associated with the roam-node in the current buffer.
