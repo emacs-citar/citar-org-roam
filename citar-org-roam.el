@@ -113,35 +113,32 @@ note."
   (interactive (list (citar-select-ref
                       :filter (citar-has-notes))))
   (let* ((ids
-         (org-roam-db-query [:select * :from citations
-                             :where (= cite-key $s1)] reference))
+           (org-roam-db-query [:select * :from citations
+                                         :where (= cite-key $s1)] reference))
          ;; TODO one issue on the citar side: the UI has no "has" indicators for
          ;; these.
          ;; Also need an annotation for this.
          (node-id
-          (if ids
-              (completing-read "Note: " ids)
-            (message "No notes cite this reference."))))
+           (if ids
+               (completing-read "Note: " ids)
+               (message "No notes cite this reference."))))
     (org-roam-node-visit (org-roam-node-from-id node-id))))
 
 (defun citar-org-roam--node-cite-refs (roam-node)
-  "Returns citation keys in :ROAM_REFS: property of ROAM-NODE"
+  "Return citation keys in :ROAM_REFS: property of ROAM-NODE."
   (seq-filter (lambda (key) (gethash key (citar-get-entries)))
-	      (org-roam-node-refs roam-node)))
+              (org-roam-node-refs roam-node)))
 
 (defun citar-org-roam-open-current-refs (&optional prefix)
-  "With the point in the body of an org-roam node, this function
-calls `citar-open' on all citar cite keys in the :ROAM_REFS:
-property of the node.
-
+  "Call `citar-open' on all citar cite keys in :ROAM_REFS: property of the node.
 If PREFIX is given prompts to select one or more of the cite keys
 before calling `citar-open' on them."
   (interactive "P")
   (if-let ((citar-open-prompt t)
-	   (refs (citar-org-roam--node-cite-refs (org-roam-node-at-point))))
-      (if prefix
-	  (citar-open (citar-select-refs :filter (lambda (key) (member key refs))))
-	(citar-open refs))
+           (refs (citar-org-roam--node-cite-refs (org-roam-node-at-point))))
+    (if prefix
+        (citar-open (citar-select-refs :filter (lambda (key) (member key refs))))
+        (citar-open refs))
     (message "No CiteRefs for this note")))
 
 (defun citar-org-roam-open-note (key-id)
@@ -168,7 +165,7 @@ This is just a wrapper for `org-roam-ref-add'."
   (when-let ((ref-node-ids
               (org-roam-db-query
                [:select [ref node-id] :from refs
-                :where (= ref $s1)] key)))
+                                      :where (= ref $s1)] key)))
     ref-node-ids))
 
 (defun citar-org-roam-citekey-for-node-id (node-id)
@@ -193,8 +190,8 @@ This is just a wrapper for `org-roam-ref-add'."
               (node (org-roam-node-from-id nodeid))
               (ref (org-roam-db-query
                     [:select ref :from refs
-                     :where (= node-id $s1)] nodeid)))
-    (propertize (org-roam-node-title node) 'face 'citar)))
+                    :where (= node-id $s1)] nodeid)))
+             (propertize (org-roam-node-title node) 'face 'citar)))
 
 (defun citar-org-roam--get-candidates (&optional keys)
   "Return ref node candidate list, optionally filtered by KEYS.
@@ -202,37 +199,37 @@ This is just a wrapper for `org-roam-ref-add'."
 Each candidate is a citekey + node-id string, separated by a
 space."
   (let ((nodes (org-roam-db-query `[:select [refs:node-id refs:ref nodes:title]
-                                            :from [refs nodes]
-                                            :where (and (= refs:type "cite")
-                                                        (= refs:node-id nodes:id)
-                                                        ,@(when keys '((in refs:ref $v1))))]
+                                  :from [refs nodes]
+                                  :where (and (= refs:type "cite")
+                                              (= refs:node-id nodes:id)
+                                              ,@(when keys '((in refs:ref $v1))))]
                                   (vconcat keys)))
         (cands (make-hash-table :test 'equal)))
     (prog1 cands
       (pcase-dolist (`(,nodeid ,citekey ,title) nodes)
-        ;; TODO include note title in the candidate string?
-        (push
-         (concat
-          (propertize nodeid 'invisible t) " ["
-          (propertize citekey 'face 'citar-highlight)
-          (truncate-string-to-width "] " (- 60 (length citekey)) nil 32)
-          (propertize title 'face 'citar))
-         (gethash citekey cands))))))
+                    ;; TODO include note title in the candidate string?
+                    (push
+                     (concat
+                      (propertize nodeid 'invisible t) " ["
+                      (propertize citekey 'face 'citar-highlight)
+                      (truncate-string-to-width "] " (- 60 (length citekey)) nil 32)
+                      (propertize title 'face 'citar))
+                     (gethash citekey cands))))))
 
 (defun citar-org-roam--make-info-plist (citekey)
   "Return org-roam capture template plist for CITEKEY."
-    (let ((infoplist))
+  (let ((infoplist))
     (seq-do
      (pcase-lambda (`(,capturevar . ,citarvars))
-       ;; REVIEW do we only want to do this when non-nil?
+                   ;; REVIEW do we only want to do this when non-nil?
                    (setq infoplist
                          (plist-put infoplist capturevar
                                     (cdr (citar-get-field-with-value
                                           citarvars citekey)))))
-    citar-org-roam-template-fields)
+     citar-org-roam-template-fields)
     (setq infoplist
           (plist-put infoplist :citar-citekey citekey))
-  infoplist))
+    infoplist))
 
 (defun citar-org-roam--create-capture-note (citekey entry)
   "Open or create org-roam node for CITEKEY and ENTRY."
@@ -250,15 +247,15 @@ space."
            :props '(:finalize find-file)
            (if templatekey
                (list :keys templatekey)
-             (list
-              :templates
-              '(("r" "reference" plain "%?" :if-new
-                 (file+head
-                  "%(concat
+               (list
+                :templates
+                '(("r" "reference" plain "%?" :if-new
+                   (file+head
+                    "%(concat
      (when citar-org-roam-subdir (concat citar-org-roam-subdir \"/\")) \"${citar-citekey}.org\")"
-                  "#+title: ${note-title}\n")
-                 :immediate-finish t
-                 :unnarrowed t)))))
+                    "#+title: ${note-title}\n")
+                   :immediate-finish t
+                   :unnarrowed t)))))
     (org-roam-ref-add (concat "@" citekey))))
 
 (defvar citar-org-roam--orig-source citar-notes-source)
@@ -283,7 +280,7 @@ space."
   :group 'citar
   :lighter " citar-org-roam"
   (if citar-org-roam-mode (citar-org-roam-setup)
-    (citar-org-roam-reset)))
+      (citar-org-roam-reset)))
 
 (provide 'citar-org-roam)
 ;;; citar-org-roam.el ends here
