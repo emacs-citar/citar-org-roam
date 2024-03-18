@@ -1,4 +1,4 @@
-[[https://melpa.org/#/citar][file:https://melpa.org/packages/citar-org-roam-badge.svg]]
+[[https://melpa.org/#/citar-org-roam][file:https://melpa.org/packages/citar-org-roam-badge.svg]]
 
 * citar-org-roam
 
