@@ -135,11 +135,12 @@ If PREFIX is given prompts to select one or more of the cite keys
 before calling `citar-open' on them."
   (interactive "P")
   (if-let ((citar-open-prompt t)
-           (refs (citar-org-roam--node-cite-refs (org-roam-node-at-point))))
+           (node (org-roam-node-at-point))
+           (refs (citar-org-roam--node-cite-refs node)))
     (if prefix
         (citar-open (citar-select-refs :filter (lambda (key) (member key refs))))
-        (citar-open refs))
-    (message "No CiteRefs for this note")))
+      (citar-open refs))
+    (message "No CiteRefs for this file")))
 
 (defun citar-org-roam-open-note (key-id)
   "Open or creat org-roam node for KEY-ID."
