@@ -34,7 +34,7 @@
   :type 'string)
 
 (defcustom citar-org-roam-note-title-template
-  "${author editor} :: ${title}"
+  "${author editor}, ${title}"
   "The citar template to use for formatting new note titles.
 
 This is the value that is stored as the title in the `org-roam'
