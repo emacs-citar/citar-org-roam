@@ -250,7 +250,7 @@ space."
                (list :keys templatekey)
                (list
                 :templates
-                '(("r" "reference" plain "%?" :if-new
+                '(("r" "reference" plain "%?" :target
                    (file+head
                     "%(concat
      (when citar-org-roam-subdir (concat citar-org-roam-subdir \"/\")) \"${citar-citekey}.org\")"
