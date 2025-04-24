@@ -9,7 +9,7 @@
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; SPDX-FileCopyrightText: 2022 Bruce D'Arcus
 ;; Homepage: https://github.com/emacs-citar/citar-org-roam
-;; Package-Requires: ((emacs "27.1") (org-roam "2.2") (citar "1.2.0"))
+;; Package-Requires: ((emacs "27.1") (org-roam "2.2.0") (citar "1.2.0"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
